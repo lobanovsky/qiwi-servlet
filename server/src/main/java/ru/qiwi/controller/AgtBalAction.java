@@ -7,10 +7,13 @@ import ru.qiwi.model.Agent;
 import ru.qiwi.transport.ResultEnum;
 import ru.qiwi.utils.XmlUtils;
 
+import javax.servlet.AsyncContext;
+
 public class AgtBalAction extends AbstractAction {
 
 
-    public AgtBalAction(Agent agent, AgentDAO agentDAO, AccountDAO accountDAO) {
+    public AgtBalAction(AsyncContext ctx, Agent agent, AgentDAO agentDAO, AccountDAO accountDAO) {
+        this.ctx = ctx;
         this.agent = agent;
         this.agentDAO = agentDAO;
         this.accountDAO = accountDAO;
@@ -18,12 +21,17 @@ public class AgtBalAction extends AbstractAction {
 
 
     @Override
-    protected String action() {
+    public void run() {
         Integer id = agentDAO.getByLogin(agent);
-        if (id == null) return XmlUtils.responseAccountToXml(ResultEnum.AGENT_NOT_EXITS);
+        if (id == null) {
+            sendResult(XmlUtils.responseAccountToXml(ResultEnum.AGENT_NOT_EXITS));
+            return;
+        }
         Account account = accountDAO.findAccount(id);
-        if (account == null) return XmlUtils.responseAccountToXml(ResultEnum.ACCOUNT_NOT_EXITS);
-        return XmlUtils.responseAccountToXml(ResultEnum.OK, account.getAmount());
+        if (account == null) {
+            sendResult(XmlUtils.responseAccountToXml(ResultEnum.ACCOUNT_NOT_EXITS));
+            return;
+        }
+        sendResult(XmlUtils.responseAccountToXml(ResultEnum.OK, account.getAmount()));
     }
-
 }

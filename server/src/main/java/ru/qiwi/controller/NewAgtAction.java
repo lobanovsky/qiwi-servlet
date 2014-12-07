@@ -7,24 +7,49 @@ import ru.qiwi.transport.ResultEnum;
 import ru.qiwi.utils.HashUtils;
 import ru.qiwi.utils.XmlUtils;
 
+import javax.servlet.AsyncContext;
+
 public class NewAgtAction extends AbstractAction {
 
 
-    public NewAgtAction(Agent agent, AgentDAO agentDAO) {
+    public NewAgtAction(AsyncContext ctx, Agent agent, AgentDAO agentDAO) {
+        this.ctx = ctx;
         this.agent = agent;
         this.agentDAO = agentDAO;
     }
 
 
     @Override
-    protected String action() {
-        String validateResult = validate(agent);
-        if (StringUtils.isNotBlank(validateResult)) return validateResult;
-        agent.setPassword(HashUtils.hash(agent.getPassword()));
-        int i = agentDAO.createAgent(agent);
-        if (i == 0) return XmlUtils.responseAgentToXml(ResultEnum.OTHER);
-        return XmlUtils.responseAgentToXml(ResultEnum.OK);
+    public void run() {
+        try {
+
+            longProcessing(5000);
+
+            String validateResult = validate(agent);
+            if (StringUtils.isNotBlank(validateResult)) {
+                sendResult(validateResult);
+                return;
+            }
+            agent.setPassword(HashUtils.hash(agent.getPassword()));
+            int i = agentDAO.createAgent(agent);
+            if (i == 0) {
+                sendResult(XmlUtils.responseAgentToXml(ResultEnum.OTHER));
+                return;
+            }
+            sendResult(XmlUtils.responseAgentToXml(ResultEnum.OK));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private void longProcessing(int secs) {
+        try {
+            Thread.sleep(secs);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
 

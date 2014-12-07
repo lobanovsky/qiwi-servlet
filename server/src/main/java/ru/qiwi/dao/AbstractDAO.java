@@ -6,7 +6,4 @@ import javax.activation.DataSource;
 
 public class AbstractDAO extends JdbcDaoSupport {
 
-    private DataSource dataSource;
-
-
 }
