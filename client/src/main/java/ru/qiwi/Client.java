@@ -15,7 +15,7 @@ public class Client {
         String newAgt = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<request>" +
                 " <request-type>new-agt</request-type>" +
-                " <login>8(920)000-11-55</login>" +
+                " <login>8(920)000-11-77</login>" +
                 " <password>password</password>" +
                 "</request>";
 
@@ -23,7 +23,7 @@ public class Client {
         String agtBal = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<request>" +
                 " <request-type>agt-bal</request-type>" +
-                " <login>8(920)000-11-44</login>" +
+                " <login>8(920)000-11-22</login>" +
                 " <password>password</password>" +
                 "</request>";
 

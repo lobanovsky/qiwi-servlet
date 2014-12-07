@@ -69,12 +69,8 @@ public class DispatcherServlet extends HttpServlet {
             response.setContentType("application/xml; charset=UTF-8");
             PrintWriter out = response.getWriter();
             out.write(res);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
