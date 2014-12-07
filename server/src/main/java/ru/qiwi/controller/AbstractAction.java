@@ -1,6 +1,8 @@
 package ru.qiwi.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.qiwi.dao.AccountDAO;
 import ru.qiwi.dao.AgentDAO;
 import ru.qiwi.model.Agent;
@@ -15,6 +17,8 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractAction implements Runnable {
 
+    private final static Logger logger = LoggerFactory.getLogger(AbstractAction.class);
+
     protected Agent agent;
     protected AgentDAO agentDAO;
     protected AccountDAO accountDAO;
@@ -28,6 +32,7 @@ public abstract class AbstractAction implements Runnable {
             out.write(res);
             ctx.complete();
         } catch (IOException e) {
+            logger.error("IOException", e);
             throw new RuntimeException(e);
         }
     }

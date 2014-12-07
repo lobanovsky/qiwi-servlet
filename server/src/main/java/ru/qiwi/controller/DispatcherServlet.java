@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.xml.sax.SAXException;
 import ru.qiwi.dao.AccountDAO;
 import ru.qiwi.dao.AgentDAO;
 import ru.qiwi.model.Agent;
@@ -16,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -24,7 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @WebServlet(name = "client", urlPatterns = "/clients", asyncSupported = true)
 public class DispatcherServlet extends HttpServlet {
 
-    private Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
+    private final static Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
 
     private ApplicationContext applicationContext;
     private AgentDAO agentDAO;
@@ -54,10 +56,10 @@ public class DispatcherServlet extends HttpServlet {
     }
 
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             long startTime = System.currentTimeMillis();
-            logger.warn("AsyncLongRunningServlet Start::Name="
+            logger.debug("AsyncLongRunningServlet Start::Name="
                     + Thread.currentThread().getName() + "::ID="
                     + Thread.currentThread().getId());
 
@@ -84,13 +86,12 @@ public class DispatcherServlet extends HttpServlet {
             }
 
             long endTime = System.currentTimeMillis();
-            logger.warn("AsyncLongRunningServlet End::Name="
+            logger.debug("AsyncLongRunningServlet End::Name="
                     + Thread.currentThread().getName() + "::ID="
                     + Thread.currentThread().getId() + "::Time Taken="
                     + (endTime - startTime) + " ms.");
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (ParserConfigurationException | SAXException e) {
+            logger.error("Error parsing", e);
         }
     }
 

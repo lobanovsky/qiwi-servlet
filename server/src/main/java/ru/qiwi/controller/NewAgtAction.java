@@ -21,25 +21,20 @@ public class NewAgtAction extends AbstractAction {
 
     @Override
     public void run() {
-        try {
+        longProcessing(5000);
 
-            longProcessing(5000);
-
-            String validateResult = validate(agent);
-            if (StringUtils.isNotBlank(validateResult)) {
-                sendResult(validateResult);
-                return;
-            }
-            agent.setPassword(HashUtils.hash(agent.getPassword()));
-            int i = agentDAO.createAgent(agent);
-            if (i == 0) {
-                sendResult(XmlUtils.responseAgentToXml(ResultEnum.OTHER));
-                return;
-            }
-            sendResult(XmlUtils.responseAgentToXml(ResultEnum.OK));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        String validateResult = validate(agent);
+        if (StringUtils.isNotBlank(validateResult)) {
+            sendResult(validateResult);
+            return;
         }
+        agent.setPassword(HashUtils.hash(agent.getPassword()));
+        int i = agentDAO.createAgent(agent);
+        if (i == 0) {
+            sendResult(XmlUtils.responseAgentToXml(ResultEnum.OTHER));
+            return;
+        }
+        sendResult(XmlUtils.responseAgentToXml(ResultEnum.OK));
     }
 
     private void longProcessing(int secs) {

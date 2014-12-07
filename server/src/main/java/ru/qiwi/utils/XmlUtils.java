@@ -1,6 +1,8 @@
 package ru.qiwi.utils;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.qiwi.transport.Request;
 import ru.qiwi.transport.ResponseAccount;
@@ -20,6 +22,7 @@ import java.math.BigDecimal;
 
 public class XmlUtils {
 
+    private final static Logger logger = LoggerFactory.getLogger(HashUtils.class);
     public static final String DEFAULT_ENCODING = "UTF-8";
 
 
@@ -53,6 +56,7 @@ public class XmlUtils {
             marshaller.marshal(response, xml);
             return xml.toString();
         } catch (JAXBException e) {
+            logger.error("JAXBException", e);
             throw new RuntimeException(e);
         }
     }
@@ -75,6 +79,7 @@ public class XmlUtils {
             marshaller.marshal(response, xml);
             return xml.toString();
         } catch (JAXBException e) {
+            logger.error("JAXBException", e);
             throw new RuntimeException(e);
         }
     }

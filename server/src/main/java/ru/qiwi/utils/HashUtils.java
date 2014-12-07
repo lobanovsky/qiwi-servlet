@@ -1,9 +1,14 @@
 package ru.qiwi.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(HashUtils.class);
 
     public static String hash(String password) {
         try {
@@ -11,6 +16,7 @@ public class HashUtils {
             byte[] passBytes = password.getBytes();
             return convertByteArrayToHexString(sha256.digest(passBytes));
         } catch (NoSuchAlgorithmException e) {
+            logger.error("NoSuchAlgorithmException", e);
             throw new RuntimeException(e);
         }
     }
