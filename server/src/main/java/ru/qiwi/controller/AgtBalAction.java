@@ -22,7 +22,7 @@ public class AgtBalAction extends AbstractAction {
 
     @Override
     public void run() {
-        Integer id = agentDAO.getByLogin(agent);
+        Integer id = agentDAO.getByLoginAndPassword(agent);
         if (id == null) {
             sendResult(XmlUtils.responseAccountToXml(ResultEnum.AGENT_NOT_EXITS));
             return;
