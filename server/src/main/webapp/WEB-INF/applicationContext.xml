@@ -3,12 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="agentService" class="ru.qiwi.services.AgentServiceImp">
+        <property name="dao" ref="agentDao"/>
+    </bean>
 
-    <bean id="clientDAO" class="ru.qiwi.dao.AgentDAO">
+    <bean id="accountService" class="ru.qiwi.services.AccountServiceImpl">
+        <property name="dao" ref="accountDao"/>
+    </bean>
+
+    <bean id="agentDao" class="ru.qiwi.dao.AgentDAO">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="accountDAO" class="ru.qiwi.dao.AccountDAO">
+    <bean id="accountDao" class="ru.qiwi.dao.AccountDAO">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 

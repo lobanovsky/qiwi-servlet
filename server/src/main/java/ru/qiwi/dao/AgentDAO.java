@@ -1,6 +1,5 @@
 package ru.qiwi.dao;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.qiwi.model.Agent;
 import ru.qiwi.utils.HashUtils;
 
@@ -9,7 +8,6 @@ import java.util.List;
 public class AgentDAO extends AbstractDAO {
 
 
-    @Transactional
     public int createAgent(Agent agent) {
         String sql = "INSERT INTO agent (phone, password) VALUES(?, ?)";
         return getJdbcTemplate().update(sql, agent.getPhone(), agent.getPassword());

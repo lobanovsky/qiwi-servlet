@@ -3,9 +3,9 @@ package ru.qiwi.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.qiwi.dao.AccountDAO;
-import ru.qiwi.dao.AgentDAO;
 import ru.qiwi.model.Agent;
+import ru.qiwi.services.AccountService;
+import ru.qiwi.services.AgentService;
 import ru.qiwi.transport.ResultEnum;
 import ru.qiwi.utils.XmlUtils;
 
@@ -20,8 +20,8 @@ public abstract class AbstractAction implements Runnable {
     private final static Logger logger = LoggerFactory.getLogger(AbstractAction.class);
 
     protected Agent agent;
-    protected AgentDAO agentDAO;
-    protected AccountDAO accountDAO;
+    protected AgentService agentService;
+    protected AccountService accountService;
 
     protected AsyncContext ctx;
 
@@ -54,7 +54,7 @@ public abstract class AbstractAction implements Runnable {
 
 
     private boolean isExistAgent(Agent agent) {
-        return agentDAO.getByLogin(agent) != null;
+        return agentService.findIdByLogin(agent) != null;
     }
 
 

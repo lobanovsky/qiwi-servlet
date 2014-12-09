@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.xml.sax.SAXException;
-import ru.qiwi.dao.AccountDAO;
-import ru.qiwi.dao.AgentDAO;
 import ru.qiwi.model.Agent;
+import ru.qiwi.services.AccountService;
+import ru.qiwi.services.AgentService;
 import ru.qiwi.transport.Request;
 import ru.qiwi.utils.XmlUtils;
 
@@ -29,16 +29,20 @@ public class DispatcherServlet extends HttpServlet {
     private final static Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
 
     private ApplicationContext applicationContext;
-    private AgentDAO agentDAO;
-    private AccountDAO accountDAO;
+//    private AgentDAO agentDAO;
+//    private AccountDAO accountDAO;
+    private AgentService agentService;
+    private AccountService accountService;
 
 
     @Override
     public void init() throws ServletException {
         if (applicationContext == null) {
             applicationContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
-            agentDAO = applicationContext.getBean(AgentDAO.class);
-            accountDAO = applicationContext.getBean(AccountDAO.class);
+            agentService = applicationContext.getBean("agentService", AgentService.class);
+            accountService = applicationContext.getBean("accountService", AccountService.class);
+//            agentDAO = applicationContext.getBean(AgentDAO.class);
+//            accountDAO = applicationContext.getBean(AccountDAO.class);
         }
     }
 
@@ -74,12 +78,12 @@ public class DispatcherServlet extends HttpServlet {
             ThreadPoolExecutor executor = (ThreadPoolExecutor) request.getServletContext().getAttribute("executor");
             switch (req.getRequestType()) {
                 case NEW_AGT: {
-                    AbstractAction action = new NewAgtAction(aCtx, agent, agentDAO);
+                    AbstractAction action = new NewAgtAction(aCtx, agent, agentService);
                     executor.execute(action);
                     break;
                 }
                 case AGT_BAL: {
-                    AbstractAction action = new AgtBalAction(aCtx, agent, agentDAO, accountDAO);
+                    AbstractAction action = new AgtBalAction(aCtx, agent, agentService, accountService);
                     executor.execute(action);
                     break;
                 }
