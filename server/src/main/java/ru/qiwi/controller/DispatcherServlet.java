@@ -29,8 +29,6 @@ public class DispatcherServlet extends HttpServlet {
     private final static Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
 
     private ApplicationContext applicationContext;
-//    private AgentDAO agentDAO;
-//    private AccountDAO accountDAO;
     private AgentService agentService;
     private AccountService accountService;
 
@@ -41,8 +39,6 @@ public class DispatcherServlet extends HttpServlet {
             applicationContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
             agentService = applicationContext.getBean("agentService", AgentService.class);
             accountService = applicationContext.getBean("accountService", AccountService.class);
-//            agentDAO = applicationContext.getBean(AgentDAO.class);
-//            accountDAO = applicationContext.getBean(AccountDAO.class);
         }
     }
 

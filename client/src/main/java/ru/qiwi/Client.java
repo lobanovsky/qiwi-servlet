@@ -6,16 +6,13 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class Client {
 
     public static final String URL = "http://localhost:8080/qiwi/clients";
 
     public static void main(String[] args) throws InterruptedException {
-        String newAgt = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+        final String newAgt = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<request>" +
                 " <request-type>new-agt</request-type>" +
                 " <login>8(920)000-11-77</login>" +
@@ -23,41 +20,31 @@ public class Client {
                 "</request>";
 
 
-        String agtBal = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+        final String agtBal = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<request>" +
                 " <request-type>agt-bal</request-type>" +
                 " <login>8(920)000-11-22</login>" +
                 " <password>password</password>" +
                 "</request>";
 
-//        httpPost(newAgt);
-
-        ExecutorService executor = Executors.newFixedThreadPool(20);
-        for (int i = 0; i < 20; i++) {
-            if (i % 2 == 0) {
-                executor.execute(new MyRunnable(newAgt));
-            } else {
-                executor.execute(new MyRunnable(agtBal));
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                httpPost(newAgt);
             }
-        }
-        executor.shutdown();
-        executor.awaitTermination(1, TimeUnit.MINUTES);
+        });
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                httpPost(agtBal);
+            }
+        });
+
+        t1.start();
+        t2.start();
     }
 
-
-    private static class MyRunnable implements Runnable {
-
-        private String xml;
-
-        public MyRunnable(String xml) {
-            this.xml = xml;
-        }
-
-        @Override
-        public void run() {
-            httpPost(xml);
-        }
-    }
 
     private static void httpPost(String xml) {
         HttpClient client = new HttpClient();
